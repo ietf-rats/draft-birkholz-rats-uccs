@@ -1,7 +1,7 @@
 ---
 title: A CBOR Tag for Unprotected CWT Claims Sets
 abbrev: Unprotected CWT Claims Sets
-docname: draft-birkholz-rats-uccs
+docname: draft-birkholz-rats-uccs-latest
 stand_alone: true
 ipr: trust200902
 area: Security
@@ -22,6 +22,7 @@ author:
   street: Rheinstrasse 75
   code: '64295'
   city: Darmstadt
+  country: Germany
 - ins: N. Cam-Winget
   name: Nancy Cam-Winget
   org: Cisco Systems
@@ -47,7 +48,7 @@ normative:
   RFC8152: cose
   RFC8392: cwt
   IANA.cbor-tags: tags
-  
+
 --- abstract
 
 CBOR Web Token (CWT, RFC 8392) Claims Sets sometimes do not need the protection afforded by wrapping them into COSE, as is required for a true CWT.  This specification defines a CBOR tag for such unprotected CWT claims sets (UCCS) and discusses conditions for its proper use.
