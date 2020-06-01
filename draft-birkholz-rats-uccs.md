@@ -1,7 +1,7 @@
 ---
 title: A CBOR Tag for Unprotected CWT Claims Sets
 abbrev: Unprotected CWT Claims Sets
-docname: draft-birkholz-rats-uccs
+docname: draft-birkholz-rats-uccs-latest
 stand_alone: true
 ipr: trust200902
 area: Security
@@ -23,7 +23,7 @@ author:
   code: '64295'
   city: Darmstadt
   country: Geramy
-- ins: J. "O'Donoghue"
+- ins: J. O'Donoghue
   name: "Jeremy O'Donoghue"
   org: Qualcomm Technologies Inc.
   abbrev: Qualcomm Technologies Inc.
@@ -104,7 +104,7 @@ Remote ATtestation procedureS (RATS).
 This specification does not change {{-cwt}}: A true CWT does not make use of
 the tag allocated here; the UCCS tag is an alternative to using COSE
 protection and a CWT tag.  Consequently, in a well-defined scope, it might
-be acceptable to strip a CWT of its COSE container an replace the CWT Claims
+be acceptable to strip a CWT of its COSE container and replace the CWT Claims
 Set's CWT CBOR tag with a UCCS CBOR tag for further processing -- or vice
 versa.
 
@@ -123,9 +123,9 @@ Claims Registry that are composed of pairs of Claim Keys and Claim Values.
 
 # Motivation and Requirements
 Use cases involving the conveyance of claims, in particular, remote attestations
-{{-rats}} require a standardized data schema and format that can be trasferred
-and transported using different communication channels. As these are Claims, {{-cwt}} are
-a suitable format but how these Claims are secured depends on the deployment, the security
+{{-rats}} require a standardized data definition and encoding format that can be transferred
+and transported using different communication channels.  As these are Claims, {{-cwt}} are
+a suitable format. However, the way these Claims are secured depends on the deployment, the security
 capabilities of the device, as well as their software stack.  For example, a Claim may be securely
 stored and conveyed using the device's trusted execution environment or especially in some
 resource constrained environments the same process that provides the secure communication
