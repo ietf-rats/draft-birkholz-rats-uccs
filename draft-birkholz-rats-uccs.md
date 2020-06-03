@@ -116,7 +116,7 @@ The terms Claim Key, Claim Value, and CWT Claims Set are used as in
 {{-cwt}}.
 
 UCCS:
-: Unprotected CWT Claims Set; a CBOR map of Claims as defined by the CWT
+: Unprotected CWT Claims Set(s); CBOR map(s) of Claims as defined by the CWT
 Claims Registry that are composed of pairs of Claim Keys and Claim Values.
 
 {::boilerplate bcp14}
@@ -124,7 +124,7 @@ Claims Registry that are composed of pairs of Claim Keys and Claim Values.
 # Motivation and Requirements
 Use cases involving the conveyance of claims, in particular, remote attestations
 {{-rats}} require a standardized data definition and encoding format that can be transferred
-and transported using different communication channels.  As these are Claims, {{-cwt}} are
+and transported using different communication channels.  As these are Claims, {{-cwt}} is
 a suitable format. However, the way these Claims are secured depends on the deployment, the security
 capabilities of the device, as well as their software stack.  For example, a Claim may be securely
 stored and conveyed using the device's trusted execution environment or especially in some
@@ -133,7 +133,8 @@ transport is also the delegate to compose the Claim to be conveyed.  Whether it 
 or transport, a Secure Channel is presumed to be used for conveying such UCCS.  The following section
 further describes the requirements and scenarios in which UCCS can be used.
 
-# Characteristics of a Secure Channel {#secchan}
+{: #secchan}
+# Characteristics of a Secure Channel
 
 A Secure Channel for the conveyance of UCCS needs to provide the security
 properties that would otherwise be provided by COSE for a CWT.
@@ -170,7 +171,7 @@ establishment.
 
 If only authenticity/integrity for a Claim is required, a Secure Channel MUST
 be established to, at minimum, provide integrity of the communication.
-Further, the provider of the UCCS SHOULD be authenticated by the reciever to
+Further, the provider of the UCCS SHOULD be authenticated by the receiver to
 ensure the channel is truly secured and the sender is validated.
 If confidentiality is also required, the receiving side SHOULD also
 be authenticated.
@@ -230,7 +231,7 @@ FCFS space, with the present document as the specification reference.
 
 The security considerations of {{-cbor}} and {{-cwt}} apply.
 
-{#secchan} discusses security considerations for Secure Channels, in which
+{{secchan}} discusses security considerations for Secure Channels, in which
 UCCS might be used.  This documents provides the CBOR tag definition for UCCS and a discussion on security consideration for the use of UCCS in
 Remote ATtestation procedureS (RATS).  Uses of UCCS outside the scope of
 RATS are not covered by this document.  The UCCS specification - and the
