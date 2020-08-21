@@ -24,7 +24,7 @@ author:
   city: Darmstadt
   country: Geramy
 - ins: J. O'Donoghue
-  name: "Jeremy O'Donoghue"
+  name: Jeremy O'Donoghue
   org: Qualcomm Technologies Inc.
   abbrev: Qualcomm Technologies Inc.
   email: jodonogh@qti.qualcomm.com
@@ -89,7 +89,7 @@ though, a signature providing proof for authenticity and integrity can be
 provided through the transfer protocol and thus omitted from the
 information in a CWT without compromising the intended goal of authenticity
 and integrity.  If a mutually Secured Channel is established between two
-remote peers, and if that Secure Channel provides the correct properties, it
+remote peers, and if that Secure Channel provides the required properties (as discussed below), it
 is possible to omit the protection provided by COSE, creating a use case for
 unprotected CWT Claims Sets.
 Similarly, if there is one-way authentication, the party that did not
@@ -99,7 +99,8 @@ other party.
 
 This specification allocates a CBOR tag to mark Unprotected CWT Claims Sets
 (UCCS) as such and discusses conditions for its proper use in the scope of
-Remote ATtestation procedureS (RATS).
+Remote ATtestation procedureS (RATS) and the conveyance of Evidence from an
+Attester to a Verifier.
 
 This specification does not change {{-cwt}}: A true CWT does not make use of
 the tag allocated here; the UCCS tag is an alternative to using COSE
@@ -115,6 +116,8 @@ The term Claim is used as in {{-jwt}}.
 The terms Claim Key, Claim Value, and CWT Claims Set are used as in
 {{-cwt}}.
 
+The terms Attester and Verifier are used as in {{-rats}}.
+
 UCCS:
 : Unprotected CWT Claims Set(s); CBOR map(s) of Claims as defined by the CWT
 Claims Registry that are composed of pairs of Claim Keys and Claim Values.
@@ -122,16 +125,17 @@ Claims Registry that are composed of pairs of Claim Keys and Claim Values.
 {::boilerplate bcp14}
 
 # Motivation and Requirements
-Use cases involving the conveyance of claims, in particular, remote attestations
-{{-rats}} require a standardized data definition and encoding format that can be transferred
+
+Use cases involving the conveyance of Claims, in particular, remote attestation procedures (RATS, see
+{{-rats}}) require a standardized data definition and encoding format that can be transferred
 and transported using different communication channels.  As these are Claims, {{-cwt}} is
 a suitable format. However, the way these Claims are secured depends on the deployment, the security
 capabilities of the device, as well as their software stack.  For example, a Claim may be securely
-stored and conveyed using the device's trusted execution environment or especially in some
+stored and conveyed using a device's Trusted Execution Environment (TEE, see {{-teep}}) or especially in some
 resource constrained environments the same process that provides the secure communication
 transport is also the delegate to compose the Claim to be conveyed.  Whether it is a transfer
-or transport, a Secure Channel is presumed to be used for conveying such UCCS.  The following section
-further describes the requirements and scenarios in which UCCS can be used.
+or transport, a Secure Channel is presumed to be used for conveying such UCCS.  The following sections
+further describe the RATS usage scenario and corresponding requirements for UCCS deployment.
 
 {: #secchan}
 # Characteristics of a Secure Channel
@@ -166,15 +170,12 @@ UCCS can be used.
 Secure Channels can be transient in nature. For the purposes of this
 specification, the mechanisms used to establish a Secure Channel are out of
 scope.  As a minimum requirement in the scope of RATS Claims, however, the
-Verifier must authenticate the Attester as part of the Secure Channel
-establishment.
-
-If only authenticity/integrity for a Claim is required, a Secure Channel MUST
-be established to, at minimum, provide integrity of the communication.
-Further, the provider of the UCCS SHOULD be authenticated by the receiver to
-ensure the channel is truly secured and the sender is validated.
-If confidentiality is also required, the receiving side SHOULD also
-be authenticated.
+Verifier (the receiver of the UCCS) MUST authenticate the
+Attester (the provider of the UCCS) as part of the establishment of the Secure Channel,
+which MUST provide integrity of the communication from the Attester to the Verifier.
+If confidentiality is also required, the receiving side needs to be
+be authenticated as well, i.e., as a result the secure channel then MUST
+mutually authenticate Verifier and the Attester.
 
 The extent to which a Secure Channel can provide assurances that UCCS
 originate from a trustworthy attesting environment depends on the
