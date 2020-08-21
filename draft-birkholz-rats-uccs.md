@@ -116,11 +116,18 @@ The term Claim is used as in {{-jwt}}.
 The terms Claim Key, Claim Value, and CWT Claims Set are used as in
 {{-cwt}}.
 
-The terms Attester and Verifier are used as in {{-rats}}.
+The terms Attester, Attesting Environment and Verifier are used as in {{-rats}}.
 
 UCCS:
 : Unprotected CWT Claims Set(s); CBOR map(s) of Claims as defined by the CWT
 Claims Registry that are composed of pairs of Claim Keys and Claim Values.
+
+Secure Channel:
+: A protected communication channel between two peers that can ensure the same qualities
+associated for UCCS conveyance as CWT conveyance without any additional protection.
+
+All terms referenced or defined in this section are capitalized in the remainder of
+this document.
 
 {::boilerplate bcp14}
 
