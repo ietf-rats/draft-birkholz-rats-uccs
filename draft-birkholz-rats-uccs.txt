@@ -5,12 +5,12 @@
 RATS Working Group                                           H. Birkholz
 Internet-Draft                                            Fraunhofer SIT
 Intended status: Standards Track                           J. O'Donoghue
-Expires: 22 February 2021                     Qualcomm Technologies Inc.
+Expires: 9 September 2021                     Qualcomm Technologies Inc.
                                                            N. Cam-Winget
                                                            Cisco Systems
                                                               C. Bormann
                                                  Universitaet Bremen TZI
-                                                          21 August 2020
+                                                            8 March 2021
 
 
                A CBOR Tag for Unprotected CWT Claims Sets
@@ -51,18 +51,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 1]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
-
-   This Internet-Draft will expire on 22 February 2021.
+   This Internet-Draft will expire on 9 September 2021.
 
 Copyright Notice
 
-   Copyright (c) 2020 IETF Trust and the persons identified as the
+   Copyright (c) 2021 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -76,25 +69,30 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
-   2.  Motivation and Requirements . . . . . . . . . . . . . . . . .   4
-   3.  Characteristics of a Secure Channel . . . . . . . . . . . . .   4
-     3.1.  UCCS and Remote ATtestation procedureS (RATS) . . . . . .   5
-     3.2.  Privacy Preserving Channels . . . . . . . . . . . . . . .   5
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   7
-   Appendix A.  Example  . . . . . . . . . . . . . . . . . . . . . .   8
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+   1.  Introduction
+     1.1.  Terminology
+   2.  Motivation and Requirements
+   3.  Characteristics of a Secure Channel
+     3.1.  UCCS and Remote ATtestation procedureS (RATS)
+     3.2.  Privacy Preserving Channels
+   4.  IANA Considerations
+   5.  Security Considerations
+     5.1.  General Considerations
+     5.2.  AES-CBC_MAC
+     5.3.  AES-GCM
+     5.4.  AES-CCM
+     5.5.  ChaCha20 and Poly1305
+   6.  References
+     6.1.  Normative References
+     6.2.  Informative References
+   Appendix A.  Example
+   Authors' Addresses
 
 1.  Introduction
 
    A CBOR Web Token (CWT) as specified by [RFC8392] is always wrapped in
    a CBOR Object Signing and Encryption (COSE, [RFC8152]) envelope.
-   COSE provides - amongst other things - the integrity protection
+   COSE provides -- amongst other things -- the integrity protection
    mandated by RFC 8392 and optional encryption for CWTs.  Under the
    right circumstances, though, a signature providing proof for
    authenticity and integrity can be provided through the transfer
@@ -106,14 +104,6 @@ Table of Contents
    creating a use case for unprotected CWT Claims Sets.  Similarly, if
    there is one-way authentication, the party that did not authenticate
    may be in a position to send authentication information through this
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 2]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
-
    channel that allows the already authenticated party to authenticate
    the other party.
 
@@ -125,9 +115,10 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    This specification does not change [RFC8392]: A true CWT does not
    make use of the tag allocated here; the UCCS tag is an alternative to
    using COSE protection and a CWT tag.  Consequently, in a well-defined
-   scope, it might be acceptable to strip a CWT of its COSE container
-   and replace the CWT Claims Set's CWT CBOR tag with a UCCS CBOR tag
-   for further processing - or vice versa.
+   scope, it might be acceptable to use the contents of a CWT without
+   its COSE container and tag it with a UCCS CBOR tag for further
+   processing -- or to use the contents of a UCCS CBOR tag for building
+   a CWT to be signed by some entity that can vouch for those contents.
 
 1.1.  Terminology
 
@@ -156,20 +147,6 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-
-
-
-
-
-
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 3]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
-
 2.  Motivation and Requirements
 
    Use cases involving the conveyance of Claims, in particular, remote
@@ -182,7 +159,7 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    stack.  For example, a Claim may be securely stored and conveyed
    using a device's Trusted Execution Environment (TEE, see
    [I-D.ietf-teep-architecture]) or especially in some resource
-   constrained environments the same process that provides the secure
+   constrained environments, the same process that provides the secure
    communication transport is also the delegate to compose the Claim to
    be conveyed.  Whether it is a transfer or transport, a Secure Channel
    is presumed to be used for conveying such UCCS.  The following
@@ -218,34 +195,40 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    environments are intended to be used to convey UCCS, similar
    considerations need to be documented before UCCS can be used.
 
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 4]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
-
 3.1.  UCCS and Remote ATtestation procedureS (RATS)
+
+   For the purposes of this section, the Verifier is the receiver of the
+   UCCS and the Attester is the provider of the UCCS.
 
    Secure Channels can be transient in nature.  For the purposes of this
    specification, the mechanisms used to establish a Secure Channel are
-   out of scope.  As a minimum requirement in the scope of RATS Claims,
-   however, the Verifier (the receiver of the UCCS) MUST authenticate
-   the Attester (the provider of the UCCS) as part of the establishment
-   of the Secure Channel, which MUST provide integrity of the
-   communication from the Attester to the Verifier.  If confidentiality
-   is also required, the receiving side needs to be be authenticated as
-   well, i.e., as a result the secure channel then MUST mutually
-   authenticate Verifier and the Attester.
+   out of scope.
+
+   As a minimum requirement in the scope of RATS Claims, the Verifier
+   MUST authenticate the Attester as part of the establishment of the
+   Secure Channel.  Furthermore, the channel MUST provide integrity of
+   the communication from the Attester to the Verifier.  If
+   confidentiality is also required, the receiving side needs to be be
+   authenticated as well, i.e., the Verifier and the Attester SHOULD
+   mutually authenticate when establishing the Secure Channel.
 
    The extent to which a Secure Channel can provide assurances that UCCS
    originate from a trustworthy attesting environment depends on the
    characteristics of both the cryptographic mechanisms used to
    establish the channel and the characteristics of the attesting
-   environment itself.  A Secure Channel established or maintained using
-   weak cryptography may not provide the assurance required by a relying
-   party of the authenticity and integrity of the UCCS.
+   environment itself.
+
+   A Secure Channel established or maintained using weak cryptography
+   may not provide the assurance required by a relying party of the
+   authenticity and integrity of the UCCS.
+
+   Ultimately, it is up to the Verifier's policy to determine whether to
+   accept a UCCS from the Attester and to the type of Secure Channel it
+   must negotiate.  While the security considerations of the
+   cryptographic algorithms used are similar to COSE, the considerations
+   of the secure channel should also adhere to the policy configured at
+   each of the Attester and the Verifier.  However, the policy controls
+   and definitions are out of scope for this document.
 
    Where the security assurance required of an attesting environment by
    a relying party requires it, the attesting environment may be
@@ -254,6 +237,12 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    approach might be to implement the attesting environment in a
    hardened environment such as a TEE [I-D.ietf-teep-architecture] or a
    TPM [TPM2].
+
+   When UCCS emerge from the Secure Channel and into the Verifier, the
+   security properties of the Secure Channel no longer apply and UCCS
+   have the same properties as any other unprotected data in the
+   Verifier environment.  If the Verifier subsequently forwards UCCS,
+   they are treated as though they originated within the Verifier.
 
    As with EATs nested in other EATs (Section 3.12.1.2 of
    [I-D.ietf-rats-eat]), the Secure Channel does not endorse fully
@@ -271,16 +260,6 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    correlate UCCS received in different sessions from the same attesting
    environment based on the cryptographic mechanisms used when a privacy
    preserving Secure Channel is employed.
-
-
-
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 5]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
 
    In the case of a Remote Attestation, the attester must consider
    whether any UCCS it returns over a privacy preserving Secure Channel
@@ -321,6 +300,86 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
    specific security consideration discussion has not been conducted,
    vetted and approved for that use.
 
+5.1.  General Considerations
+
+   Implementations of Secure Channels are often separate from the
+   application logic that has security requirements on them.  Similar
+   security considerations to those described in
+   [I-D.ietf-cose-rfc8152bis-struct] for obtaining the required levels
+   of assurance include:
+
+   *  Implementations need to provide sufficient protection for private
+      or secret key material used to establish or protect the Secure
+      Channel.
+
+   *  Using a key for more than one algorithm can leak information about
+      the key and is not recommended.
+
+   *  An algorithm used to establish or protect the Secure Channel may
+      have limits on the number of times that a key can be used without
+      leaking information about the key.
+
+   The Verifier needs to ensure that the management of key material used
+   establish or protect the Secure Channel is acceptable.  This may
+   include factors such as:
+
+   *  Ensuring that any permissions associated with key ownership are
+      respected in the establishment of the Secure Channel.
+
+   *  Cryptographic algorithms are used appropriately.
+
+   *  Key material is used in accordance with any usage restrictions
+      such as freshness or algorithm restrictions.
+
+   *  Ensuring that appropriate protections are in place to address
+      potential traffic analysis attacks.
+
+5.2.  AES-CBC_MAC
+
+   *  A given key should only be used for messages of fixed or known
+      length.
+
+   *  Different keys should be used for authentication and encryption
+      operations.
+
+   *  A mechanism to ensure that IV cannot be modified is required.
+
+   [I-D.ietf-cose-rfc8152bis-algs], Section 3.2.1 contains a detailed
+   explanation of these considerations.
+
+5.3.  AES-GCM
+
+   *  The key and nonce pair are unique for every encrypted message.
+
+   *  The maximum number of messages to be encrypted for a given key is
+      not exceeded.
+
+   [I-D.ietf-cose-rfc8152bis-algs], Section 4.1.1 contains a detailed
+   explanation of these considerations.
+
+5.4.  AES-CCM
+
+   *  The key and nonce pair are unique for every encrypted message.
+
+   *  The maximum number of messages to be encrypted for a given block
+      cipher is not exceeded.
+
+   *  The number of messages both successfully and unsuccessfully
+      decrypted is used to determine when rekeying is required.
+
+   [I-D.ietf-cose-rfc8152bis-algs], Section 4.2.1 constains a detailed
+   explanation of these considerations.
+
+5.5.  ChaCha20 and Poly1305
+
+   *  The nonce is unique for every encrypted message.
+
+   *  The number of messages both successfully and unsuccessfully
+      decrypted is used to determine when rekeying is required.
+
+   [I-D.ietf-cose-rfc8152bis-algs], Section 4.3.1 contains a detailed
+   explanation of these considerations.
+
 6.  References
 
 6.1.  Normative References
@@ -329,85 +388,79 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
               IANA, "Concise Binary Object Representation (CBOR) Tags",
               <http://www.iana.org/assignments/cbor-tags>.
 
-
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 6]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              <https://datatracker.ietf.org/doc/html/rfc2119>.
 
    [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
-              October 2013, <https://www.rfc-editor.org/info/rfc7049>.
+              October 2013,
+              <https://datatracker.ietf.org/doc/html/rfc7049>.
 
    [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
               RFC 8152, DOI 10.17487/RFC8152, July 2017,
-              <https://www.rfc-editor.org/info/rfc8152>.
+              <https://datatracker.ietf.org/doc/html/rfc8152>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+              May 2017, <https://datatracker.ietf.org/doc/html/rfc8174>.
 
    [RFC8392]  Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
               "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
-              May 2018, <https://www.rfc-editor.org/info/rfc8392>.
+              May 2018, <https://datatracker.ietf.org/doc/html/rfc8392>.
 
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/info/rfc8446>.
+              <https://datatracker.ietf.org/doc/html/rfc8446>.
 
    [RFC8725]  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
               Current Practices", BCP 225, RFC 8725,
               DOI 10.17487/RFC8725, February 2020,
-              <https://www.rfc-editor.org/info/rfc8725>.
+              <https://datatracker.ietf.org/doc/html/rfc8725>.
 
    [TPM2]     "Trusted Platform Module Library Specification, Family
-              "2.0", Level 00, Revision 01.59 ed., Trusted Computing
+              “2.0”, Level 00, Revision 01.59 ed., Trusted Computing
               Group", 2019.
 
 6.2.  Informative References
+
+   [I-D.ietf-cose-rfc8152bis-algs]
+              Schaad, J., "CBOR Object Signing and Encryption (COSE):
+              Initial Algorithms", Work in Progress, Internet-Draft,
+              draft-ietf-cose-rfc8152bis-algs-12, 24 September 2020,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-cose-
+              rfc8152bis-algs-12.txt>.
+
+   [I-D.ietf-cose-rfc8152bis-struct]
+              Schaad, J., "CBOR Object Signing and Encryption (COSE):
+              Structures and Process", Work in Progress, Internet-Draft,
+              draft-ietf-cose-rfc8152bis-struct-15, 1 February 2021,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-cose-
+              rfc8152bis-struct-15.txt>.
 
    [I-D.ietf-rats-architecture]
               Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
               W. Pan, "Remote Attestation Procedures Architecture", Work
               in Progress, Internet-Draft, draft-ietf-rats-architecture-
-              05, 10 July 2020, <http://www.ietf.org/internet-drafts/
-              draft-ietf-rats-architecture-05.txt>.
-
-
-
-
-
-
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 7]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
-
+              10, 9 February 2021,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-rats-
+              architecture-10.txt>.
 
    [I-D.ietf-rats-eat]
               Mandyam, G., Lundblade, L., Ballesteros, M., and J.
               O'Donoghue, "The Entity Attestation Token (EAT)", Work in
-              Progress, Internet-Draft, draft-ietf-rats-eat-03, 20
-              February 2020, <http://www.ietf.org/internet-drafts/draft-
-              ietf-rats-eat-03.txt>.
+              Progress, Internet-Draft, draft-ietf-rats-eat-09, 7 March
+              2021, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              rats-eat-09.txt>.
 
    [I-D.ietf-teep-architecture]
               Pei, M., Tschofenig, H., Thaler, D., and D. Wheeler,
               "Trusted Execution Environment Provisioning (TEEP)
               Architecture", Work in Progress, Internet-Draft, draft-
-              ietf-teep-architecture-12, 13 July 2020,
-              <http://www.ietf.org/internet-drafts/draft-ietf-teep-
-              architecture-12.txt>.
+              ietf-teep-architecture-14, 22 February 2021,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-teep-
+              architecture-14.txt>.
 
 Appendix A.  Example
 
@@ -434,20 +487,6 @@ Authors' Addresses
    Darmstadt
 
    Email: henk.birkholz@sit.fraunhofer.de
-
-
-
-
-
-
-
-
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 8]
-
-Internet-Draft         Unprotected CWT Claims Sets           August 2020
 
 
    Jeremy O'Donoghue
@@ -477,28 +516,3 @@ Internet-Draft         Unprotected CWT Claims Sets           August 2020
 
    Phone: +49-421-218-63921
    Email: cabo@tzi.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Birkholz, et al.        Expires 22 February 2021                [Page 9]
